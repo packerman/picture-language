@@ -17,28 +17,15 @@ fun arrow(length: Double, width: Double): Painter<CanvasRenderingContext2D> {
     )
 }
 
-infix fun <C : CanvasRenderingContext2D> Painter<C>.withState(action: C.() -> Unit): Painter<C> = { context, frame ->
-    context.save()
-    context.action()
-    this(context, frame)
-    context.restore()
-}
-
 fun main() {
     val canvas = document.getElementById("render") as HTMLCanvasElement
     val context = requireNotNull(canvas.getContext(CanvasRenderingContext2D.ID)) {
         "Cannot initialize Canvas 2D context"
     }
 
-//    val painter = arrow(0.85, 0.15).squareLimit(0)
-    val painter = arrow(0.85, 0.15).printing().squareLimit(5)
-    println("Canvas size ${canvas.width} ${canvas.height}")
+    val painter = arrow(0.85, 0.15).squareLimit(5)
 
-    val frame = Frame.fromPoints(
-        Vector(0.0, canvas.height - 1.0),
-        Vector(canvas.width - 1.0, canvas.height - 1.0),
-        Vector(0.0, 0.0)
-    )
-
-    painter(context, frame)
+    paint(canvas) { frame ->
+        painter(context, frame)
+    }
 }
